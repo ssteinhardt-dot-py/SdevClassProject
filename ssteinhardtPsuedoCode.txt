@@ -1,0 +1,71 @@
+﻿#Psuedocode for group project
+SET FEDERAL_TAX_RATE = 0.079
+SET STATE_TAX_RATE = 0.056
+SET OVERTIME_MULTIPLIER = 1.5
+SET REGULAR_HOURS = 40
+
+
+RATES = {
+	'E001': 22.50,
+	'E002': 30.00,
+	'E003': 25.00,
+	'E004': 22.50,
+	'E005': 25.00
+	
+}
+
+function getEmployeeRate(employeeId):
+	if employeeId not in RATES then
+		output 'Invalid ID'
+		return NULL
+	else
+		return RATES[employeeId]
+
+function calculateGrossPay(hoursWorked, employeeRate):
+	if hoursWorked <= REGULAR_HOURS then
+		grossPay = hoursWorked * employeeRate
+		return grossPay
+	else
+		overtimePay = (hoursWorked - REGULAR_HOURS) * (OVERTIME_MULTIPLIER * employeeRate)
+		grossPay = overtimePay + (REGULAR_HOURS * employeeRate)
+		return grossPay
+	endif
+main()
+
+output 'Please enter your employee ID'
+input employeeId
+output 'Please enter your first name'
+input firstName
+output 'Please enter your last name'
+input lastName
+output 'Please enter the number of your dependents'
+input dependents
+output 'Please enter hours worked' 
+input hoursWorked
+
+employeeRate = getEmployeeRate(employeeId)
+
+#we now have the employee’s ID, first name, last name, and num of dependents
+#hours worked, and rate
+
+
+#calculate gross pay
+gross = calculateGrossPay(hoursWorked, employeeRate)
+calculate state tax
+stateTax = gross * STATE_TAX_RATE
+calculate federal tax
+federalTax = gross * FEDERAL_TAX_RATE
+calculate pre tax amount
+pretax = gross
+
+calculate post tax amount
+netPay = gross - (stateTax + federalTax)
+
+output 'GROSS PAY: $' + gross
+output 'STATE TAX DEDUCTED: $' + stateTax
+output 'FEDERAL TAX DEDUCTED: $' + federalTax
+output 'NET PAY: $' + netPay
+output 'END OF JOB – PAYROLL COMPLETE'
+
+record into spreadsheet
+
