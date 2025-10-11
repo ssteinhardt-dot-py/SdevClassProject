@@ -1,4 +1,4 @@
 ExcelExport()
 export grosspay
-insert gross C3
+recordToExcel(Gross)
 end
