@@ -22,7 +22,32 @@ RATES = {
 	'E014': 15.00,
 	'E015': 15.00
 }
-
+function getInput():
+	output 'Please enter your employee ID'
+	input employeeId
+	output 'Please enter your first name'
+	input firstName
+	output 'Please enter your last name'
+	input lastName
+	output 'Please enter the number of your dependents'
+	input dependents
+	output 'Please enter hours worked' 
+	input hoursWorked
+	record = [employeeId, firstName, lastName, dependents, hoursWorked]
+		return {
+			ID: employeeId,
+			FIRST: firstName,
+			LAST: lastName,
+			DEPENDENTS: dependents,
+			HOURS: hoursWorked,
+		}
+function promptContinue():
+	output "Would you like to calculate payroll and export to spreadsheet? y/n: "
+	input prompt
+	if prompt = 'y'
+		return true
+	else
+		return false
 function getEmployeeRate(employeeId):
 	if employeeId not in RATES then
 		output 'Invalid ID'
@@ -36,45 +61,46 @@ function calculateGrossPay(hoursWorked, employeeRate):
 		return grossPay
 	else
 		overtimePay = (hoursWorked - REGULAR_HOURS) * (OVERTIME_MULTIPLIER * employeeRate)
-		grossPay = overtimePay + (REGULAR_HOURS * employeeRate)
+		preOvertime = REGULAR_HOURS * employeeRate
+		grossPay = overtimePay + preOvertime
 		return grossPay
 	endif
+		
 main()
-
-output 'Please enter your employee ID'
-input employeeId
-output 'Please enter your first name'
-input firstName
-output 'Please enter your last name'
-input lastName
-output 'Please enter the number of your dependents'
-input dependents
-output 'Please enter hours worked' 
-input hoursWorked
-
-employeeRate = getEmployeeRate(employeeId)
-
-#we now have the employee’s ID, first name, last name, and num of dependents
-#hours worked, and rate
+continueCalculation = promptContinue()
+while continueCalculation is true then
+	record = getInput()
+	rate = getEmployeeRate(record.ID)
+	hours = record.HOURS
+	#we now have the employee’s ID, first name, last name, and num of dependents
+	#hours worked, and rate
 
 
-#calculate gross pay
-gross = calculateGrossPay(hoursWorked, employeeRate)
-calculate state tax
-stateTax = gross * STATE_TAX_RATE
-calculate federal tax
-federalTax = gross * FEDERAL_TAX_RATE
-calculate pre tax amount
-pretax = gross
+	#calculate gross pay, the pretax amount
+	gross = calculateGrossPay(hours, rate)
+	#calculate state tax
+	stateTax = gross * STATE_TAX_RATE
+	#calculate federal tax
+	federalTax = gross * FEDERAL_TAX_RATE
 
-calculate post tax amount
-netPay = gross - (stateTax + federalTax)
+	#calculate the net pay or 'post tax amount'
+	netPay = gross - (stateTax + federalTax)
 
-output 'GROSS PAY: $' + gross
-output 'STATE TAX DEDUCTED: $' + stateTax
-output 'FEDERAL TAX DEDUCTED: $' + federalTax
-output 'NET PAY: $' + netPay
+
+	#Now we need to output to a spreadsheet and prime the loop
+	#we are assuming here that exporting to a premade excel spreadsheet is possible here and that we dont have to build a module for it and will come back to it later
+	exportGross(record.ID, gross)
+	
+	#variable to continue the loop
+	continueCalculation = promptContinue()
+	
+	#Ouputs gross pay, tax deducted and so on
+	output 'GROSS PAY: $' + gross
+	output 'STATE TAX DEDUCTED: $' + stateTax
+	output 'FEDERAL TAX DEDUCTED: $' + federalTax
+	output 'NET PAY: $' + netPay
 output 'END OF JOB – PAYROLL COMPLETE'
+	
 
-record into spreadsheet
+
 
