@@ -1,0 +1,103 @@
+﻿#Pseudocode for group project
+
+#Housekeeping
+
+SET FEDERAL_TAX_RATE = 0.079
+SET STATE_TAX_RATE = 0.056
+SET OVERTIME_MULTIPLIER = 1.5
+SET REGULAR_HOURS = 40
+
+#Array for pay rates
+RATES = {
+	'E001': 30.00,
+	'E002': 25.00,
+	'E003': 22.00,
+	'E004': 22.00,
+	'E005': 22.00,
+	'E006': 22.00,
+	'E007': 22.00,
+	'E008': 22.00,
+	'E009': 22.00,
+	'E010': 22.00,
+	'E011': 22.00,
+	'E012': 22.00,
+	'E013': 22.00,
+	'E014': 15.00,
+	'E015': 15.00
+}
+#detailLoop
+continueCalculation = promptContinue()
+while continueCalculation is true then
+	record = getInput()
+	employeeId, firstName, lastName, dependents, hoursWorked = record[0, 1 , 2, 3, 4]
+	rate = getEmployeeRate(employeeId)
+
+
+	#calculate gross pay, the pretax amount
+	gross = calculateGrossPay(hoursWorked, rate)
+	#calculate state tax
+	stateTax = gross * STATE_TAX_RATE
+	#calculate federal tax
+	federalTax = gross * FEDERAL_TAX_RATE
+
+	#calculate the net pay or 'post tax amount'
+	netPay = gross - (stateTax + federalTax)
+
+
+	#Export provided by Jayden
+	fileName = 'GrossOutput.xlsx'
+	append record to fileName
+	
+	#variable to continue the loop
+	continueCalculation = promptContinue()
+	
+	#Ouputs gross pay, tax deducted and so on
+	output 'GROSS PAY: $' + gross
+	output 'STATE TAX DEDUCTED: $' + stateTax
+	output 'FEDERAL TAX DEDUCTED: $' + federalTax
+	output 'NET PAY: $' + netPay
+#End of job
+output 'END OF JOB – PAYROLL COMPLETE'
+
+
+function getInput():
+	output 'Please enter your employee ID'
+	input employeeId
+	output 'Please enter your first name'
+	input firstName
+	output 'Please enter your last name'
+	input lastName
+	output 'Please enter the number of your dependents'
+	input dependents
+	output 'Please enter hours worked' 
+	input hoursWorked
+	record = [employeeId, firstName, lastName, dependents, hoursWorked]
+		return record
+function promptContinue():
+	output "Would you like to calculate payroll and export to spreadsheet? y/n: "
+	input prompt
+	if prompt = 'y'
+		return true
+	else
+		return false
+function getEmployeeRate(employeeId):
+	if employeeId not in RATES then
+		output 'Invalid ID'
+		return NULL
+	else
+		return RATES[employeeId]
+
+function calculateGrossPay(hoursWorked, employeeRate):
+	if hoursWorked <= REGULAR_HOURS then
+		grossPay = hoursWorked * employeeRate
+		return grossPay
+	else
+		overtimePay = (hoursWorked - REGULAR_HOURS) * (OVERTIME_MULTIPLIER * employeeRate)
+		preOvertime = REGULAR_HOURS * employeeRate
+		grossPay = overtimePay + preOvertime
+		return grossPay
+	endif
+
+
+
+
